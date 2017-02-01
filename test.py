@@ -10,13 +10,13 @@ from numpy import *
 import numpy as np
 
 
-numbin = 10
-X = random.normal(2, 0.4, 500)                
-F, bins= stats.make_histogram(X, numbin)               
-P = normalized(F)                             
-D = stats.DiscreteRandomVariable(X, P, bins)        
+numbin = 50
+x = random.normal(2, 0.4, 500)                
+F, bins= stats.make_histogram(x, numbin)               
+P = stats.normalized(F)                             
+X = stats.DiscreteRandomVariable(x, P, bins)        
 rs = arange(0.05, 4.5, 0.05)                  
-vs = array([stats.cumulative(0,D, i) for i in rs])  
+vs = array([X.P[0:i] for i in rs])  
 
 
 fig, ax = plt.subplots(nrows=3, ncols=1, sharex=True,
@@ -25,7 +25,7 @@ fig, ax = plt.subplots(nrows=3, ncols=1, sharex=True,
 fig.suptitle('Statskit Test Plots', fontsize=20)
 
 ax[1].set_title("Numpy native histogram")
-ax[1].hist(X, bins=numbin)
+ax[1].hist(x, bins=numbin)
 ax[1].set_xlim(0, 4.)
 
 xticks = ax[1].get_xticks()

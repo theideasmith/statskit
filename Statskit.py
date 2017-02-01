@@ -3,11 +3,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 class DiscreteRandomVariable:
   def __init__(self,X, P, bins):
-    self.X = X
-    self.P = P
-    self.H = P*X.shape[0]
+    self.xs = X
+    self.pdf = P
+    self.hist = P*X.shape[0]
     self.bins = bins
-    
+    self.E = Expectation(self)
+    self.P = Probability(self)
+
+class Expectation:
+  def __init__(self, parentdist):
+    self.dist = parentdist
+  def __getitem__(self, f):
+    return expectation(f, self.dist)
+
+class Probability:
+  def __init__(self, parentdist):
+    self.dist = parentdist
+
+  def __getitem__(self, interval):
+    return cdf(interval.start, self.dist, interval.stop)
+
 def make_histogram(x, bins): 
   """
   Histograms by range dx
@@ -65,26 +80,23 @@ def expectation(F, X):
   """
   
 # The probability density function lambda=l
-  l = X.P/(X.bins[1:] - X.bins[:-1])
+  l = X.pdf/(X.bins[1:] - X.bins[:-1])
   return sum( l *(F(X.bins[1:]) - F(X.bins[:-1])) )
 
-def mean(D):
+def emean(X):
   """
   Mean defined in terms of expected value
   """                                                        
-  return expectation( lambda y: (1./2)*pow(y,2), D)
+  return expectation( lambda y: (1./2)*pow(y,2), X)
   
-def variance(D):
+def evariance(X):
   """
   Variance defined in terms of expected value
   """
-  u = mean(D)
-  return expectation( lambda y: (1./3)*pow(y-u,3), D)
+  u = mean(X)
+  return lambda y: (1./3)*pow(y-u,3)
  
-def stddev(D):
-  return sqrt( variance(D) )
-
-def cumulative(a,X,b):
+def cdf(a,X,b):
   bins = array(X.bins)
   if a ==b: 
     return 0
@@ -113,11 +125,11 @@ def cumulative(a,X,b):
   inda = argbinmin-1  
   indb = argbinmax     
    
-  Ps = array(X.P[inda:indb] )
-  pmin = X.P[argbinmin-1]
+  Ps = array(X.pdf[inda:indb] )
+  pmin = X.pdf[argbinmin-1]
   pmin_percentage =(bins[argbinmin]-a)/(bins[argbinmin]-bins[argbinmin-1])
 
-  pmax = X.P[argbinmax-1]
+  pmax = X.pdf[argbinmax-1]
   pmax_percentage = (b-bins[argbinmax-1])/(bins[argbinmax]-bins[argbinmax-1])
   
   Ps[0] = pmin*pmin_percentage
@@ -127,10 +139,8 @@ def cumulative(a,X,b):
 
 if __name__=="__main__":
   X = random.normal(2, 0.4, 500)
-  a = min(X)
-  b = max(X)
   F, bins= make_histogram(X, 100)
   P = normalized(F)
-  D = DiscreteRandomVariable(X, P, bins)
-  for i in range(10):
-    cumulative(1., D, 1+0.2*i) 
+  X = DiscreteRandomVariable(X, P, bins)
+  print X.E[lambda x: x]
+  print X.P[0.2:2] 
