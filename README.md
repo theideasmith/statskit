@@ -38,7 +38,8 @@ X.P[0.2:3.5]
 
 ## Expectation
 
-You can compute the expectation of a random variable with respect to a function. Due to the way statskit works, any function you pass must be given as its antiderivative. So if you wanted to compute `E[f]` you must use `F` as the function passed. 
+You can compute the expectation of a random variable with respect to a function. 
+Due to the way statskit computes expected value of a numerical as opposed to symbolic distribution, if you want to compute teh expectation of a function `f` you must pass its antiderivative `F`, like so:
 
 ```
 expectation = X.E[ F ]
