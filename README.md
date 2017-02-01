@@ -51,14 +51,17 @@ Statskit has already implemented expected:
 
 Which you can use as:
 
-`X.E[ emean() ]`
-
-`X.E[ evariance() ]`
+```python
+X.E[ emean() ]
+```
+```python
+X.E[ evariance() ]
+```
 
 ## Plots
 
 Now, let's do a plot
-```
+```python
 # Data to plot the cdf 
 rs = np.arange(0, 4.5, 0.05)       
 # Generating the pdf
