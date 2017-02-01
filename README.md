@@ -36,4 +36,4 @@ ax[1].bar(bins[:-1], F.tolist(), width=bins[1:] - bins[:-1])
 ax[1].set_xlim(0, 4.)
  ```
  
- ![Image](https://raw.githubusercontent.com/theideasmith/statskit/master/dist.png)
+ ![Image](https://raw.githubusercontent.com/theideasmith/statskit/master/dist.jpg)
