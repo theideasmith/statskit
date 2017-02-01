@@ -87,7 +87,7 @@ def emean(X):
   """
   Mean defined in terms of expected value
   """                                                        
-  return expectation( lambda y: (1./2)*pow(y,2), X)
+  return lambda y: (1./2)*pow(y,2)
   
 def evariance(X):
   """
