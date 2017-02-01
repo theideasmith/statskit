@@ -15,6 +15,7 @@ First, we'll sample from a normal distribution
 x = random.normal(2, 0.4, 500)
 ```
 
+## PMF
 Statskit computes binned frequencies
 ```python
 F, bins= stats.make_histogram(x, 100) 
@@ -29,11 +30,32 @@ Package everything nicely with the `stats.DiscreteRandomVariable` data structure
 X = stats.DiscreteRandomVariable(x, P, bins)     
 ```
 
-Statskit can do cumulative binned probabilities and uses linear interpolation if the limits of summation don't exactly match the bin boundaries. 
+Calculate the probability `X` falls in a range using the `P` operator
 
 ```python
-cumfreq(0.2, X, 3.2)
+X.P[0.2:3.5]
 ```
+
+## Expectation
+
+You can compute the expectation of a random variable with respect to a function. Due to the way statskit works, any function you pass must be given as its antiderivative. So if you wanted to compute `E[f]` you must use `F` as the function passed. 
+
+```
+expectation = X.E[ F ]
+```
+
+Statskit has already implemented expected: 
+
+- `emean()`
+- `evariance()`
+
+Which you can use as:
+
+`X.E[ emean() ]`
+
+`X.E[ evariance() ]`
+
+## Plots
 
 Now, let's do a plot
 ```
