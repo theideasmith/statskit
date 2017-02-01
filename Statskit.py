@@ -93,39 +93,37 @@ def cumulative(a,X,b):
     return 
 
 # Get the intervals
-  argbinmin = np.digitize(a, bins[:-1]) 
-  argbinmax = np.digitize(b, bins[1:]) 
-  
-  if argbinmin == 0:
-    argbinmin = 1
+  argbinmin = np.digitize(a, bins) 
+  argbinmax = np.digitize(b, bins) 
+  if (argbinmin == 0 and argbinmax ==0) or (argbinmax == len(bins) and argbinmin == len(bins)):
+    return 0
+
   if argbinmax == 0:
     argbinmax = 1
+  if argbinmin == 0:
+    argbinmin = 1
 
+  if argbinmax == len(bins):
+    argbinmax = len(bins) -1
+  if argbinmin == len(bins):
+    argbinmin = len(bins) -1 
+
+  # Here we do a little bit of nasty interpolation
+  # that could be vectorized if I had more brain density
   inda = argbinmin-1  
   indb = argbinmax     
-# Make alterations to the first and last
-# interval
-  starts = bins[inda:indb]
-  ends = bins[(inda+1):(indb+1)]
-  
-  starts[0] = max(a, starts[0])
-  
-  ends[-1] = min(b, ends[-1])
+   
+  Ps = array(X.P[inda:indb] )
+  pmin = X.P[argbinmin-1]
+  pmin_percentage =(bins[argbinmin]-a)/(bins[argbinmin]-bins[argbinmin-1])
 
-#  print "A", a, bins[0]
-#  print "B", b, bins[-1]
-#  for i in range(len(starts)):
-#    print "{} < {}".format(starts[i], ends[i])
-# Actually compute the interval size
-  dx = ends-starts
-  probs = X.P[inda:indb]
+  pmax = X.P[argbinmax-1]
+  pmax_percentage = (b-bins[argbinmax-1])/(bins[argbinmax]-bins[argbinmax-1])
   
-  intervals = (bins[(inda+1):(indb+1)]-bins[inda:indb])
-  intervals[-1] = bins[argbinmax-1] - b
-  l = probs/intervals
-# density*dx = probability
-# sum probability = cumulative probability
-  return sum( l*dx )
+  Ps[0] = pmin*pmin_percentage
+  Ps[-1] = pmax*pmax_percentage
+
+  return sum( Ps )
 
 if __name__=="__main__":
   X = random.normal(2, 0.4, 500)
