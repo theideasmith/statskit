@@ -18,11 +18,11 @@ x = random.normal(2, 0.4, 500)
 ## PMF
 Statskit computes binned frequencies
 ```python
-F, bins= stats.make_histogram(x, 100) 
+freq, bins= stats.make_histogram(x, 100) 
 ```
 Which you can normalize
 ```python
-P = stats.normalized(F)    
+pmf = stats.normalized(freq)    
 ```
 Package everything nicely with the `stats.DiscreteRandomVariable` data structure
 
